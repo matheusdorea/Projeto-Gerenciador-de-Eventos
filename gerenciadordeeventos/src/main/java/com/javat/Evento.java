@@ -9,7 +9,7 @@ public class Evento {
     private String local;
     private String responsavel;
 
-    private List<Artista> artistas = new ArrayList<Artista>();
+    private List<String> artistas = new ArrayList<String>();
 
     private Ingresso bilheteria;
 
@@ -22,8 +22,12 @@ public class Evento {
         this.responsavel = responsavel;
     }
 
-    public void addArtista(Artista artista) {
+    public void addArtista(String artista) {
         artistas.add(artista);
+    }
+
+    public List<String> getArtistas() {
+        return this.artistas;
     }
 
     public void setNome(String nome) {
