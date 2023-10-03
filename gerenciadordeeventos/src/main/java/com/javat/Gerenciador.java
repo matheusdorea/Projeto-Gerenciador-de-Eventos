@@ -22,6 +22,14 @@ public class Gerenciador {
         eventos.add(evento);
     }
 
+    public void removeEvento(String nome) {
+        for (Evento evento : eventos) {
+            if (evento.getNome().equals(nome)) {
+                eventos.remove(evento);
+            }
+        }
+    }
+
     public void loadArchive() throws FileNotFoundException, IOException, ParseException {
         JSONParser parser = new JSONParser();
         File file = new File("saida.json");
@@ -45,18 +53,20 @@ public class Gerenciador {
         }
     }
 
-    public String showEventos() {
-        String res = "";
-        int contador = 1;
-        for (Evento evento : eventos) {
-            res += "Evento " + contador + ": Nome: " 
-            + evento.getNome() + ", Data: " + evento.getData() + ", Local: " 
-            + evento.getLocal() + ", Responsável: " + evento.getResponsavel() + " | ";
-            contador++;
-        }
+    //to string
 
-        return res;
-    }
+    // public String showEventos() {
+    //     String res = "";
+    //     int contador = 1;
+    //     for (Evento evento : eventos) {
+    //         res += "Evento " + contador + ": Nome: " 
+    //         + evento.getNome() + ", Data: " + evento.getData() + ", Local: " 
+    //         + evento.getLocal() + ", Responsável: " + evento.getResponsavel() + " | ";
+    //         contador++;
+    //     }
+
+    //     return res;
+    // }
 
     public List<Evento> getEventos() {
         return eventos;

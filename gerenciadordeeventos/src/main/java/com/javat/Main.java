@@ -20,6 +20,7 @@ public class Main {
     private JButton button;
     private JButton button2;
     private JButton button3;
+    private JButton button4;
     private JButton voltar;
     private JLabel label;
     private JLabel label2;
@@ -55,7 +56,12 @@ public class Main {
         }
     }
 
+    public static void main(String[] args) {
+        new Main();
+    }
+
     public void telaMenu() {
+        //restante da tela de menu
         frame.setTitle("Menu");
 
         frame.remove(panel);
@@ -64,11 +70,11 @@ public class Main {
         panel.setLayout(null);
 
         label = new JLabel("Escolha uma das opções:");
-        label.setBounds(50, 20, 150, 25);
+        label.setBounds(200, 20, 150, 25);
         panel.add(label);
 
         button = new JButton("Adicionar Evento");
-        button.setBounds(50, 50, 130, 25);
+        button.setBounds(210, 50, 130, 25);
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 telaAddEvento();
@@ -77,7 +83,7 @@ public class Main {
         panel.add(button);
 
         button2 = new JButton("Remover Evento");
-        button2.setBounds(50, 80, 130, 25);
+        button2.setBounds(210, 80, 130, 25);
         button2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 
@@ -85,28 +91,42 @@ public class Main {
         });
         panel.add(button2);
 
-        button3 = new JButton("Salvar e sair");
-        button3.setBounds(50, 150, 130, 25);
+        button3 = new JButton("Editar Evento");
+        button3.setBounds(210, 110, 130, 25);
         button3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                try {
-                    gerenciador.createJsonFile();
-                } catch (IOException | ParseException e1) {
-                    e1.printStackTrace();
-                }
+
             }
         });
         panel.add(button3);
+
+        button4 = new JButton("Listar Evento");
+        button4.setBounds(210, 140, 130, 25);
+        button4.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        panel.add(button4);
+
+        // button3 = new JButton("Salvar e sair");
+        // button3.setBounds(210, 150, 130, 25);
+        // button3.addActionListener(new ActionListener() {
+        //     public void actionPerformed(ActionEvent e) {
+        //         try {
+        //             gerenciador.createJsonFile();
+        //         } catch (IOException | ParseException e1) {
+        //             e1.printStackTrace();
+        //         }
+        //     }
+        // });
+        // panel.add(button3);
 
         frame.add(panel);
         frame.setSize(600, 400);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
-    }
-
-    public static void main(String[] args) {
-        new Main();
     }
 
     public void telaAddEvento()  {
@@ -157,12 +177,30 @@ public class Main {
                 String data;
                 String local;
                 String responsavel;
+                if (nomeEventoCampo.getText().equals("") ||
+                    dataEventoCampo.getText().equals("") ||
+                    localEventoCampo.getText().equals("") ||
+                    responsavelEventoCampo.getText().equals("")) {
+                        feedback.setText("Por favor, preencha os campos corretamente");
+                        return;
+                    }
                 nome = nomeEventoCampo.getText();
                 data = dataEventoCampo.getText();
                 local = localEventoCampo.getText();
                 responsavel = responsavelEventoCampo.getText();
                 gerenciador.addEvento(new Evento(nome, data, local, responsavel));
-                feedback.setText(gerenciador.showEventos());
+                feedback.setText("Evento adicionado");
+                nomeEventoCampo.setText("");
+                dataEventoCampo.setText("");
+                localEventoCampo.setText("");
+                responsavelEventoCampo.setText("");
+
+                //criando arquivo json
+                try {
+                    gerenciador.createJsonFile();
+                } catch (IOException | ParseException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
         panel.add(button);
