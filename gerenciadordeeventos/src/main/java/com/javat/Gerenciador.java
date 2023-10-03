@@ -32,12 +32,12 @@ public class Gerenciador {
 
     public void loadArchive() throws FileNotFoundException, IOException, ParseException {
         JSONParser parser = new JSONParser();
-        File file = new File("saida.json");
+        File file = new File("eventos.json");
         if (!file.exists()) {
             array = new JSONArray();
         } else {
             array = (JSONArray) parser
-                .parse(new InputStreamReader(new FileInputStream("saida.json"), "UTF-8"));
+                .parse(new InputStreamReader(new FileInputStream("eventos.json"), "UTF-8"));
 
                 for (Object o : array) {
                     JSONObject eve_ = (JSONObject) o;
@@ -46,6 +46,7 @@ public class Gerenciador {
                     String data = eve_.get("Data").toString();
                     String local = eve_.get("Local").toString();
                     String responsavel = eve_.get("Responsavel").toString();
+                    String artista = eve_.get("Artista").toString();
 
                     Evento evento = new Evento(nome, data, local, responsavel);
                     addEvento(evento);
@@ -87,8 +88,7 @@ public class Gerenciador {
                 array.add(jsonObject);
             }
             try{
-                writeFile = new FileWriter("saida.json");
-                //Escreve no arquivo conteudo do Array JSON
+                writeFile = new FileWriter("eventos.json");
                 writeFile.write(array.toJSONString());
                 writeFile.close();
             }

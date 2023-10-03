@@ -22,6 +22,7 @@ public class Main {
     private JButton button3;
     private JButton button4;
     private JButton voltar;
+    private JTextField textbox;
     private JLabel label;
     private JLabel label2;
     private JLabel feedback;
@@ -86,7 +87,7 @@ public class Main {
         button2.setBounds(210, 80, 130, 25);
         button2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                
+                telaRemoveEvento();
             }
         });
         panel.add(button2);
@@ -127,6 +128,38 @@ public class Main {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
+    }
+
+    public void telaRemoveEvento() {
+        frame.setTitle("Remover Evento");
+
+        frame.remove(panel);
+
+        panel = new JPanel();
+        panel.setLayout(null);
+
+        label = new JLabel("Digite o nome do evento que quer remover:");
+        label.setBounds(160, 20, 250, 25);
+        panel.add(label);
+
+        textbox = new JTextField();
+        textbox.setBounds(220, 50, 120, 25);
+        panel.add(textbox);
+
+        frame.add(panel);
+        frame.setSize(600, 400);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+
+        voltar = new JButton("Voltar ao menu");
+        voltar.setBounds(10, 240, 120, 25);
+        voltar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                telaMenu();
+            }
+        });
+        panel.add(voltar);
     }
 
     public void telaAddEvento()  {
