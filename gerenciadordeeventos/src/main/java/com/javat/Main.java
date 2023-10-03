@@ -2,7 +2,7 @@ package com.javat;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
+//import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.swing.JButton;
@@ -13,14 +13,16 @@ import javax.swing.JTextField;
 
 import org.json.simple.parser.ParseException;
 
-public class Main{
+public class Main {
     //objetos gerais
     private JFrame frame;
     private JPanel panel;
     private JButton button;
     private JButton button2;
+    private JButton button3;
     private JButton voltar;
     private JLabel label;
+    private JLabel label2;
     private JLabel feedback;
 
     //objetos da tela de adicionar evento
@@ -44,6 +46,13 @@ public class Main{
         panel.setLayout(null);
 
         telaMenu();
+
+        //recendo arquivo json
+        try {
+            gerenciador.loadArchive();
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public void telaMenu() {
@@ -67,9 +76,27 @@ public class Main{
         });
         panel.add(button);
 
-        button2 = new JButton("outro botão lá");
+        button2 = new JButton("Remover Evento");
         button2.setBounds(50, 80, 130, 25);
+        button2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                
+            }
+        });
         panel.add(button2);
+
+        button3 = new JButton("Salvar e sair");
+        button3.setBounds(50, 150, 130, 25);
+        button3.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    gerenciador.createJsonFile();
+                } catch (IOException | ParseException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        panel.add(button3);
 
         frame.add(panel);
         frame.setSize(600, 400);
@@ -134,7 +161,7 @@ public class Main{
                 data = dataEventoCampo.getText();
                 local = localEventoCampo.getText();
                 responsavel = responsavelEventoCampo.getText();
-                gerenciador.addEvento(nome, data, local,responsavel);
+                gerenciador.addEvento(new Evento(nome, data, local, responsavel));
                 feedback.setText(gerenciador.showEventos());
             }
         });

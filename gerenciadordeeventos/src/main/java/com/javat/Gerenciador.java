@@ -15,21 +15,43 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class Gerenciador {
+    JSONArray array;
     private List<Evento> eventos = new ArrayList<Evento>();
 
-    public Gerenciador() {
-
+    public void addEvento(Evento evento) {
+        eventos.add(evento);
     }
 
-    public void addEvento(String nome, String data, String local, String responsavel) {
-        eventos.add(new Evento(nome, data, local, responsavel));
+    public void loadArchive() throws FileNotFoundException, IOException, ParseException {
+        JSONParser parser = new JSONParser();
+        File file = new File("saida.json");
+        if (!file.exists()) {
+            array = new JSONArray();
+        } else {
+            array = (JSONArray) parser
+                .parse(new InputStreamReader(new FileInputStream("saida.json"), "UTF-8"));
+
+                for (Object o : array) {
+                    JSONObject eve_ = (JSONObject) o;
+                    // Salva nas variaveis os dados retirados do arquivo
+                    String nome = eve_.get("Nome").toString();
+                    String data = eve_.get("Data").toString();
+                    String local = eve_.get("Local").toString();
+                    String responsavel = eve_.get("Responsavel").toString();
+
+                    Evento evento = new Evento(nome, data, local, responsavel);
+                    addEvento(evento);
+                }
+        }
     }
 
     public String showEventos() {
         String res = "";
         int contador = 1;
         for (Evento evento : eventos) {
-            res += "Evento " + contador + ": Nome: " + evento.getNome() + ", Data: " + evento.getData() + ", Local: " + evento.getLocal() + ", Responsável: " + evento.getResponsavel() + " | ";
+            res += "Evento " + contador + ": Nome: " 
+            + evento.getNome() + ", Data: " + evento.getData() + ", Local: " 
+            + evento.getLocal() + ", Responsável: " + evento.getResponsavel() + " | ";
             contador++;
         }
 
@@ -40,42 +62,28 @@ public class Gerenciador {
         return eventos;
     }
 
-    public void importJsonFile() {
-        
-    }
-
     public void createJsonFile() throws FileNotFoundException, IOException, ParseException {
-        JSONArray array;
-
 		FileWriter writeFile = null;
-        File file = new File("saida.json");
-        if (!file.exists()) {
-            array = new JSONArray();
-        } else {
-            JSONParser parser = new JSONParser();
-            array = (JSONArray) parser
-                .parse(new InputStreamReader(new FileInputStream("saida.json"), "UTF-8"));
-        }
-
+        array.clear();
         for (Evento evento : eventos) {
-            JSONObject jsonObject = new JSONObject();
+                JSONObject jsonObject = new JSONObject();
 
-            //Armazena dados em um Objeto JSON
-            jsonObject.put("Nome", evento.getNome());
-            jsonObject.put("Data", evento.getData());
-            jsonObject.put("Local", evento.getLocal());
-            jsonObject.put("Responsável", evento.getResponsavel());
+                //Armazena dados em um Objeto JSON
+                jsonObject.put("Nome", evento.getNome());
+                jsonObject.put("Data", evento.getData());
+                jsonObject.put("Local", evento.getLocal());
+                jsonObject.put("Responsavel", evento.getResponsavel());
 
-            array.add(jsonObject);
+                array.add(jsonObject);
+            }
             try{
                 writeFile = new FileWriter("saida.json");
-                //Escreve no arquivo conteudo do Objeto JSON
+                //Escreve no arquivo conteudo do Array JSON
                 writeFile.write(array.toJSONString());
                 writeFile.close();
             }
             catch(IOException e){
                 e.printStackTrace();
-            }
             }
     }
 }
