@@ -24,11 +24,13 @@ public class Main {
     private JButton button4;
     private JButton button5;
     private JButton button6;
+    private JButton button7;
+    private JButton button8;
     private JButton voltar;
     private JTextField textbox;
     private JTextField textbox2;
+    private JTextField textbox3;
     private JLabel label;
-    private JLabel label2;
     private JLabel feedback;
 
     //objetos da tela de adicionar evento
@@ -64,6 +66,13 @@ public class Main {
         //recebendo arquivo json de artistas
         try {
             gerenciador.loadArtistArchive();
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+
+        //recebendo arquivo json de bandas
+        try {
+            gerenciador.loadBandArchive();
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
@@ -109,7 +118,7 @@ public class Main {
         button3.setBounds(210, 110, 130, 25);
         button3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                telaEditarEvento();
             }
         });
         panel.add(button3);
@@ -140,6 +149,24 @@ public class Main {
             }
         });
         panel.add(button6);
+
+        button8 = new JButton("Adicionar Banda");
+        button8.setBounds(210, 230, 130, 25);
+        button8.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                telaAddBanda();
+            }
+        });
+        panel.add(button8);
+
+        button7 = new JButton("Cadastrar Banda");
+        button7.setBounds(200, 260, 150, 25);
+        button7.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                telaCadastrarBanda();
+            }
+        });
+        panel.add(button7);
 
         frame.add(panel);
         frame.setSize(600, 400);
@@ -255,6 +282,76 @@ public class Main {
         frame.setLocationRelativeTo(null);
     }
 
+    //tela para cadastrar bandas ao gerenciador
+    public void telaCadastrarBanda() {
+        frame.setTitle("Cadastrar Banda");
+
+        frame.remove(panel);
+
+        panel = new JPanel();
+        panel.setLayout(null);
+
+        label = new JLabel("Nome da Banda:");
+        label.setBounds(20, 50, 120, 25);
+        panel.add(label);
+
+        label = new JLabel("Gênero musical:");
+        label.setBounds(20, 80, 120, 25);
+        panel.add(label);
+
+        label = new JLabel("Número de integrantes:");
+        label.setBounds(20, 120, 150, 25);
+        panel.add(label);
+
+        textbox = new JTextField();
+        textbox.setBounds(120, 50, 120, 25);
+        panel.add(textbox);
+
+        textbox2 = new JTextField();
+        textbox2.setBounds(120, 80, 120, 25);
+        panel.add(textbox2);
+
+        textbox3 = new JTextField();
+        textbox3.setBounds(160, 120, 120, 25);
+        panel.add(textbox3);
+
+        button = new JButton("Cadastrar");
+        button.setBounds(10, 210, 120, 25);
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                //cadastrando Artista
+                String nome = textbox.getText();
+                String generoMusical = textbox2.getText();
+                int integrantes = Integer.parseInt(textbox3.getText());
+                gerenciador.addBanda(new Banda(nome, generoMusical, integrantes));
+
+                //criando arquivo de artistas
+                try {
+                    gerenciador.createBandFile();
+                } catch (IOException | ParseException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        panel.add(button);
+
+        voltar = new JButton("Voltar ao menu");
+        voltar.setBounds(10, 240, 120, 25);
+        voltar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                telaMenu();
+            }
+        });
+        panel.add(voltar);
+
+        frame.add(panel);
+        frame.setSize(600, 400);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+    }
+
     //tela para adicionar artistas ao evento
     public void telaAddArtistas() {
         frame.setTitle("Adicionar Artistas");
@@ -291,6 +388,75 @@ public class Main {
                 if (gerenciador.eventoExiste(textbox.getText())) {
                     if (gerenciador.artistaExiste(textbox2.getText())) {
                         gerenciador.getEvento(nomeEvento).addArtista(nomeArtista);
+
+                        //atualizando no arquivo de eventos
+                        try {
+                            gerenciador.createEventFile();
+                            System.out.println("Cadastrou");
+                        } catch (IOException | ParseException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                } else {
+                    //impossível adicionar
+                    System.out.println("não foi possível adicionar");
+                }
+            }
+        });
+        panel.add(button);
+
+        voltar = new JButton("Voltar ao menu");
+        voltar.setBounds(10, 240, 120, 25);
+        voltar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                telaMenu();
+            }
+        });
+        panel.add(voltar);
+
+        frame.add(panel);
+        frame.setSize(600, 400);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+    }
+
+    //tela para adicionar Banda ao evento
+    public void telaAddBanda() {
+        frame.setTitle("Adicionar Bandas");
+
+        frame.remove(panel);
+
+        panel = new JPanel();
+        panel.setLayout(null);
+
+        label = new JLabel("Nome do Evento:");
+        label.setBounds(20, 50, 120, 25);
+        panel.add(label);
+
+        textbox = new JTextField();
+        textbox.setBounds(120, 50, 120, 25);
+        panel.add(textbox);
+
+        label = new JLabel("Nome da Banda:");
+        label.setBounds(20, 80, 120, 25);
+        panel.add(label);
+
+        textbox2 = new JTextField();
+        textbox2.setBounds(120, 80, 120, 25);
+        panel.add(textbox2);
+
+        button = new JButton("Adicionar");
+        button.setBounds(10, 210, 120, 25);
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                //Adicionando Banda
+                String nomeEvento = textbox.getText();
+                String nomeBanda = textbox2.getText();
+                if (gerenciador.eventoExiste(textbox.getText())) {
+                    if (gerenciador.bandaExiste(textbox2.getText())) {
+                        gerenciador.getEvento(nomeEvento).addBanda(nomeBanda);
 
                         //atualizando no arquivo de eventos
                         try {
@@ -404,6 +570,106 @@ public class Main {
         feedback = new JLabel("");
         feedback.setBounds(10, 170, 2000, 50);
         panel.add(feedback);
+
+        voltar = new JButton("Voltar ao menu");
+        voltar.setBounds(10, 240, 120, 25);
+        voltar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                telaMenu();
+            }
+        });
+        panel.add(voltar);
+
+        frame.add(panel);
+        frame.setSize(600, 400);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+    }
+
+    //tela editar evento
+    public void telaEditarEvento() {
+        frame.setTitle("Editar Evento");
+
+        frame.remove(panel);
+
+        panel = new JPanel();
+        panel.setLayout(null);
+
+        label = new JLabel("Digite o nome do evento:");
+        label.setBounds(10, 20, 150, 25);
+        panel.add(label);
+
+        textbox = new JTextField();
+        textbox.setBounds(160, 20, 120, 25);
+        panel.add(textbox);
+
+        button = new JButton("Procurar");
+        button.setBounds(300, 20, 100, 25);
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String nome = textbox.getText();
+                Evento evento = gerenciador.getEvento(nome);
+
+                textbox2.setText(evento.getNome());
+                dataEventoCampo.setText(evento.getData());
+                localEventoCampo.setText(evento.getLocal());
+                responsavelEventoCampo.setText(evento.getResponsavel());
+            }
+        });
+        panel.add(button);
+
+        label = new JLabel("Nome:");
+        label.setBounds(10, 50, 50, 25);
+        panel.add(label);
+
+        textbox2 = new JTextField();
+        textbox2.setBounds(60, 50, 120, 25);
+        panel.add(textbox2);
+
+        label = new JLabel("Data:");
+        label.setBounds(10, 80, 50, 25);
+        panel.add(label);
+
+        dataEventoCampo = new JTextField();
+        dataEventoCampo.setBounds(60, 80, 100, 25);
+        panel.add(dataEventoCampo);
+
+        localEventoTexto = new JLabel("Local:");
+        localEventoTexto.setBounds(10, 110, 50, 25);
+        panel.add(localEventoTexto);
+
+        localEventoCampo = new JTextField();
+        localEventoCampo.setBounds(60, 110, 100, 25);
+        panel.add(localEventoCampo);
+
+        responsavelEventoTexto = new JLabel("Responsável:");
+        responsavelEventoTexto.setBounds(10, 140, 100, 25);
+        panel.add(responsavelEventoTexto);
+
+        responsavelEventoCampo = new JTextField();
+        responsavelEventoCampo.setBounds(100, 140, 100, 25);
+        panel.add(responsavelEventoCampo);
+
+        button2 = new JButton("Alterar");
+        button2.setBounds(10, 180, 100, 25);
+        button2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Evento evento = gerenciador.getEvento(textbox.getText());
+
+                evento.setNome(textbox2.getText());
+                evento.setData(dataEventoCampo.getText());
+                evento.setLocal(localEventoCampo.getText());
+                evento.setResponsavel(responsavelEventoCampo.getText());
+
+                try {
+                    gerenciador.createEventFile();
+                } catch (IOException | ParseException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        panel.add(button2);
 
         voltar = new JButton("Voltar ao menu");
         voltar.setBounds(10, 240, 120, 25);

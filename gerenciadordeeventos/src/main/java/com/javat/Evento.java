@@ -11,6 +11,8 @@ public class Evento {
 
     private List<String> artistas = new ArrayList<String>();
 
+    private List<String> bandas = new ArrayList<String>();
+
     private Ingresso bilheteria;
 
     private String eventoInfo;
@@ -26,8 +28,16 @@ public class Evento {
         artistas.add(artista);
     }
 
+    public void addBanda(String banda) {
+        bandas.add(banda);
+    }
+
     public List<String> getArtistas() {
         return this.artistas;
+    }
+
+    public List<String> getBandas() {
+        return this.bandas;
     }
 
     public void setNome(String nome) {

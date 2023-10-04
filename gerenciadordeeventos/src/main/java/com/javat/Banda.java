@@ -1,13 +1,11 @@
 package com.javat;
 
-import java.awt.List;
-
 public class Banda {
     private String nome;
     private String generoMusical;
-    private String integrantes;
+    private int integrantes;
     
-    public Banda(String nome, String generoMusical, String integrantes) {
+    public Banda(String nome, String generoMusical, int integrantes) {
         this.nome = nome;
         this.generoMusical = generoMusical;
         this.integrantes = integrantes;
@@ -27,6 +25,14 @@ public class Banda {
 
     public void setGeneroMusical(String generoMusical) {
         this.generoMusical = generoMusical;
+    }
+
+    public void setIntegrantes(int integrantes) {
+        this.integrantes = integrantes;
+    }
+
+    public int getIntegrantes() {
+        return this.integrantes;
     }
 
 }
