@@ -94,14 +94,17 @@ public class Gerenciador {
             for (Evento evento : eventos) {
                 if (evento.getNome().equals(nome)) {
                     eventos.remove(evento);
+                    System.out.println("Removi");
+                    return;
                 }
+                
             }
         } else {
             System.out.println("Evento não encontrado");
         }
     }
 
-    public void loadArchive() throws FileNotFoundException, IOException, ParseException {
+    public void loadEventArchive() throws FileNotFoundException, IOException, ParseException {
         JSONParser parser = new JSONParser();
         File file = new File("eventos.json");
         if (!file.exists()) {
@@ -117,11 +120,15 @@ public class Gerenciador {
                     String data = eve_.get("Data").toString();
                     String local = eve_.get("Local").toString();
                     String responsavel = eve_.get("Responsavel").toString();
+
+                    //recebendo uma lista de strings e colocando na lista artistasLoc
                     List<String> artistasLoc = new ArrayList<String>();
                     for (String artista : (List<String>) eve_.get("Artistas")) {
                         artistasLoc.add(artista);
                     }
 
+                    //adicionando evento na lista de evento, alem de adicionar
+                    //a lista de artistas em seus respectivos eventos
                     Evento evento = new Evento(nome, data, local, responsavel);
                     for (String string : artistasLoc) {
                         evento.addArtista(string);
@@ -131,26 +138,35 @@ public class Gerenciador {
         }
     }
 
-    //to string
+    //método que carrega o arquivo de artistas
+    public void loadArtistArchive() throws FileNotFoundException, IOException, ParseException {
+        JSONParser parser = new JSONParser();
+        File file = new File("artistas.json");
+        if (!file.exists()) {
+            array = new JSONArray();
+        } else {
+            array = (JSONArray) parser
+                .parse(new InputStreamReader(new FileInputStream("artistas.json"), "UTF-8"));
 
-    // public String showEventos() {
-    //     String res = "";
-    //     int contador = 1;
-    //     for (Evento evento : eventos) {
-    //         res += "Evento " + contador + ": Nome: " 
-    //         + evento.getNome() + ", Data: " + evento.getData() + ", Local: " 
-    //         + evento.getLocal() + ", Responsável: " + evento.getResponsavel() + " | ";
-    //         contador++;
-    //     }
+                for (Object o : array) {
+                    JSONObject eve_ = (JSONObject) o;
+                    // Salva nas variaveis os dados retirados do arquivo
+                    String nome = eve_.get("Nome").toString();
+                    String generoMusical = eve_.get("Genero Musical").toString();
 
-    //     return res;
-    // }
+                    //adicionando artista na lista
+                    Artista artista = new Artista(nome, generoMusical);
+
+                    addArtista(artista);
+                }
+        }
+    }
 
     public List<Evento> getEventos() {
         return eventos;
     }
 
-    public void createJsonFile() throws FileNotFoundException, IOException, ParseException {
+    public void createEventFile() throws FileNotFoundException, IOException, ParseException {
 		FileWriter writeFile = null;
         array.clear();
         for (Evento evento : eventos) {
@@ -163,15 +179,32 @@ public class Gerenciador {
                 jsonObject.put("Responsavel", evento.getResponsavel());
                 jsonObject.put("Artistas", evento.getArtistas());
 
-                // List<String> artitasNomes = new ArrayList<String>();
-                // for (Artista artista: evento.getArtistas()) {
-                //     artitasNomes.add(null)
-                // }
-
                 array.add(jsonObject);
             }
             try{
                 writeFile = new FileWriter("eventos.json");
+                writeFile.write(array.toJSONString());
+                writeFile.close();
+            }
+            catch(IOException e){
+                e.printStackTrace();
+            }
+    }
+
+    public void createArtistFile() throws FileNotFoundException, IOException, ParseException {
+		FileWriter writeFile = null;
+        array.clear();
+        for (Artista artista : artistas) {
+                JSONObject jsonObject = new JSONObject();
+
+                //Armazena dados em um Objeto JSON
+                jsonObject.put("Nome", artista.getNome());
+                jsonObject.put("Genero Musical", artista.getGeneroMusical());
+
+                array.add(jsonObject);
+            }
+            try{
+                writeFile = new FileWriter("artistas.json");
                 writeFile.write(array.toJSONString());
                 writeFile.close();
             }

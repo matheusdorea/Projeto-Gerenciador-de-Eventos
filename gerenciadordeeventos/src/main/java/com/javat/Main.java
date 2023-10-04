@@ -54,9 +54,16 @@ public class Main {
 
         telaMenu();
 
-        //recendo arquivo json
+        //recebendo arquivo json de eventos
         try {
-            gerenciador.loadArchive();
+            gerenciador.loadEventArchive();
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+
+        //recebendo arquivo json de artistas
+        try {
+            gerenciador.loadArtistArchive();
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
@@ -158,6 +165,21 @@ public class Main {
         textbox.setBounds(220, 50, 120, 25);
         panel.add(textbox);
 
+        button = new JButton("Remover");
+        button.setBounds(215, 80, 130, 25);
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String nomeEvento = textbox.getText();
+                gerenciador.removeEvento(nomeEvento);
+                try {
+                    gerenciador.createEventFile();
+                } catch (IOException | ParseException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        panel.add(button);
+
         voltar = new JButton("Voltar ao menu");
         voltar.setBounds(10, 240, 120, 25);
         voltar.addActionListener(new ActionListener() {
@@ -203,8 +225,16 @@ public class Main {
         button.setBounds(10, 210, 120, 25);
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
                 //cadastrando Artista
                 gerenciador.addArtista(new Artista(textbox.getText(), textbox2.getText()));
+
+                //criando arquivo de artistas
+                try {
+                    gerenciador.createArtistFile();
+                } catch (IOException | ParseException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
         panel.add(button);
@@ -254,15 +284,17 @@ public class Main {
         button.setBounds(10, 210, 120, 25);
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
                 //Adicionando Artista
                 String nomeEvento = textbox.getText();
                 String nomeArtista = textbox2.getText();
                 if (gerenciador.eventoExiste(textbox.getText())) {
                     if (gerenciador.artistaExiste(textbox2.getText())) {
                         gerenciador.getEvento(nomeEvento).addArtista(nomeArtista);
-                        //atualizando no arquivo
+
+                        //atualizando no arquivo de eventos
                         try {
-                            gerenciador.createJsonFile();
+                            gerenciador.createEventFile();
                             System.out.println("Cadastrou");
                         } catch (IOException | ParseException e1) {
                             e1.printStackTrace();
@@ -359,9 +391,9 @@ public class Main {
                 localEventoCampo.setText("");
                 responsavelEventoCampo.setText("");
 
-                //criando arquivo json
+                //criando arquivo json para eventos
                 try {
-                    gerenciador.createJsonFile();
+                    gerenciador.createEventFile();;
                 } catch (IOException | ParseException e1) {
                     e1.printStackTrace();
                 }
