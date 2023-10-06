@@ -241,7 +241,6 @@ public class Gerenciador {
         array.clear();
         for (Evento evento : eventos) {
                 JSONObject jsonObject = new JSONObject();
-                JSONObject jsonPat = new JSONObject();
                 JSONArray patArray = new JSONArray();
 
                 //Armazena dados em um Objeto JSON
@@ -252,17 +251,17 @@ public class Gerenciador {
                 jsonObject.put("Artistas", evento.getArtistas());
                 jsonObject.put("Bandas", evento.getBandas());
 
-                //adicionando os patrocinadores em uma lista de objetos json
                 for (Patrocinador pat : evento.getPatrocinadores()) {
+                    JSONObject jsonPat = new JSONObject();
                     jsonPat.put("Nome", pat.getNome());
                     jsonPat.put("Valor", pat.getPatrocinio());
-
+                
                     patArray.add(jsonPat);
                 }
-
-                //adicionando a lista de objetos no json do evento;
+                
+                // Adicione a lista de objetos JSON no JSON do evento
                 jsonObject.put("Patrocinadores", patArray);
-
+                
                 array.add(jsonObject);
             }
             try{

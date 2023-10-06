@@ -118,7 +118,7 @@ public class Main {
         });
         panel.add(button2);
 
-        button3 = new JButton("Editar Show");
+        button3 = new JButton("Procurar Show");
         button3.setBounds(100, 130, 150, 25);
         button3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -216,7 +216,7 @@ public class Main {
 
     //Tela para adicionar show
      public void telaAddEvento()  {
-        frame.setTitle("Adicionar Evento");
+        frame.setTitle("Adicionar Show");
 
         frame.remove(panel);
 
@@ -380,14 +380,14 @@ public class Main {
 
     //Tela para editar evento
     public void telaEditarEvento() {
-        frame.setTitle("Editar Evento");
+        frame.setTitle("Procurar Show");
 
         frame.remove(panel);
 
         panel = new JPanel();
         panel.setLayout(null);
 
-        label = new JLabel("Digite o nome do evento:");
+        label = new JLabel("Digite o nome do show:");
         label.setBounds(10, 20, 200, 25);
         panel.add(label);
 
@@ -613,49 +613,56 @@ public class Main {
         panel.add(textbox3);
 
         feedback = new JLabel("");
-        feedback.setBounds(10, 200, 2000, 50);
+        feedback.setBounds(10, 190, 2000, 50);
         panel.add(feedback);
 
         button = new JButton("Adicionar");
         button.setBounds(10, 230, 120, 25);
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //Adicionando Artista
+                //Adicionando Patrocinador
                 String nomeEvento = textbox.getText();
                 String nomePat = textbox2.getText();
                 double valorPat = 0;
                 Patrocinador pat = null;
-                
-                valorPat = Double.parseDouble(textbox3.getText());
-
-                //criando novo patrocinador com os valores coletados
-                pat = new Patrocinador(nomePat, valorPat);
-                
 
                 if (nomeEvento.equals("") ||
                     nomePat.equals("") ||
                     textbox3.getText().equals("")){
                         feedback.setText("Por favor, preencha os campos corretamente!");
-                        return;
                 } else {
-                    if (gerenciador.eventoExiste(textbox.getText())) {
-                        gerenciador.getEvento(nomeEvento).addPatrocinador(pat);
-                        
-                        for (Patrocinador patr : gerenciador.getEvento(nomeEvento).getPatrocinadores()) {
-                            System.out.println(patr.getNome());
+                    try {
+                        if (gerenciador.eventoExiste(textbox.getText())) {
+                            valorPat = Double.parseDouble(textbox3.getText());
+                            if (valorPat > 0) {
+                                //criando novo patrocinador com os valores coletados
+                                pat = new Patrocinador(nomePat, valorPat);
+                                gerenciador.getEvento(nomeEvento).addPatrocinador(pat);
+                                
+                                
+                                for (Patrocinador patr : gerenciador.getEvento(nomeEvento).getPatrocinadores()) {
+                                    System.out.println(patr.getNome());
+                                }
+                                //atualizando no arquivo de eventos
+                                try {
+                                    gerenciador.createEventFile();
+                                } catch (IOException | ParseException e1) {
+                                    e1.printStackTrace();
+                                }
+                                feedback.setText("Patrocinador adicionado!");
+                                textbox.setText("");
+                                textbox2.setText("");
+                            } else {
+                                feedback.setText("O valor tem que ser maior que 0.");
+                            }
+                            
+                        } else {
+                            feedback.setText("Evento não encontrado!");
                         }
-                        //atualizando no arquivo de eventos
-                        try {
-                            gerenciador.createEventFile();
-                        } catch (IOException | ParseException e1) {
-                            e1.printStackTrace();
-                        }
-                        feedback.setText("Patrocinador adicionado!");
-                        textbox.setText("");
-                        textbox2.setText("");
-                    } else {
-                        feedback.setText("Evento não encontrado");
+                    } catch (NumberFormatException ex) {
+                       feedback.setText("Valor inválido!");
                     }
+                    
                 }
             }
         });
@@ -912,10 +919,10 @@ public class Main {
                             textbox2.setText("");
                             textbox3.setText("");
                         } else {
-                            feedback.setText("O número de integrantes deve ser um valor inteiro maior que zero");
+                            feedback.setText("O número de integrantes tem que ser maior que 0.");
                         }
                     } catch (NumberFormatException ex) {
-                        feedback.setText("O número de integrantes deve ser um valor inteiro");
+                        feedback.setText("Valor inválido!");
                     }
             
                 }
