@@ -13,6 +13,8 @@ public class Evento {
 
     private List<String> bandas = new ArrayList<String>();
 
+    private List<Patrocinador> patrocinadores = new ArrayList<Patrocinador>();
+
     private Ingresso bilheteria;
 
     private String eventoInfo;
@@ -24,12 +26,20 @@ public class Evento {
         this.responsavel = responsavel;
     }
 
+    public void addPatrocinador(Patrocinador patrocinador) {
+        patrocinadores.add(patrocinador);
+    }
+
     public void addArtista(String artista) {
         artistas.add(artista);
     }
 
     public void addBanda(String banda) {
         bandas.add(banda);
+    }
+
+    public List<Patrocinador> getPatrocinadores() {
+        return this.patrocinadores;
     }
 
     public List<String> getArtistas() {

@@ -147,6 +147,15 @@ public class Gerenciador {
                         artistasLoc.add(artista);
                     }
 
+                    List<Patrocinador> patLoc = new ArrayList<Patrocinador>();
+                    for (JSONObject jsonObject : (List<JSONObject>)eve_.get("Patrocinadores")) {
+                        Patrocinador pat = 
+                        new Patrocinador(jsonObject.get("Nome").toString() ,
+                                        Double.parseDouble(jsonObject.get("Valor").toString()));
+
+                        patLoc.add(pat);
+                    }
+
                     //recebendo uma lista de strings e colocando na lista artistasLoc
                     List<String> bandasLoc = new ArrayList<String>();
                     for (String artista : (List<String>) eve_.get("Bandas")) {
@@ -163,6 +172,10 @@ public class Gerenciador {
                     //adicionando a lista de bandas no evento
                     for (String string : bandasLoc) {
                         evento.addBanda(string);
+                    }
+
+                    for (Patrocinador pat : patLoc) {
+                        evento.addPatrocinador(pat);
                     }
 
                     addEvento(evento);
@@ -228,6 +241,8 @@ public class Gerenciador {
         array.clear();
         for (Evento evento : eventos) {
                 JSONObject jsonObject = new JSONObject();
+                JSONObject jsonPat = new JSONObject();
+                JSONArray patArray = new JSONArray();
 
                 //Armazena dados em um Objeto JSON
                 jsonObject.put("Nome", evento.getNome());
@@ -236,6 +251,17 @@ public class Gerenciador {
                 jsonObject.put("Responsavel", evento.getResponsavel());
                 jsonObject.put("Artistas", evento.getArtistas());
                 jsonObject.put("Bandas", evento.getBandas());
+
+                //adicionando os patrocinadores em uma lista de objetos json
+                for (Patrocinador pat : evento.getPatrocinadores()) {
+                    jsonPat.put("Nome", pat.getNome());
+                    jsonPat.put("Valor", pat.getPatrocinio());
+
+                    patArray.add(jsonPat);
+                }
+
+                //adicionando a lista de objetos no json do evento;
+                jsonObject.put("Patrocinadores", patArray);
 
                 array.add(jsonObject);
             }
